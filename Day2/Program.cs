@@ -56,64 +56,18 @@ bool IsSafe(List<int> level)
 
 bool IsSafe2(List<int> level)
 {
-    var fault = 0;
-    if(!forward(level))
+    for(int i = 0; i < level.Count; i++)
     {
-        var current = level[0];
-        for(int i = 0; i < level.Count - 1; i++)
+        var tempLevel = level.ToList();
+        tempLevel.RemoveAt(i);
+        if(IsSafe(tempLevel))
         {
-            if(level[i + 1] >= current)
-            {
-                if(fault > 0)
-                {
-                    return false;
-                }
-                fault++;
-                continue;
-            }
-            var distance = current - level[i + 1];
-            if(distance < 1 || distance > 3)
-            {
-
-                if(fault > 0)
-                {
-                    return false;
-                }
-                fault++;
-            }
-
-            current = level[i + 1];
+            return true;
         }
     }
-    else
-    {
-        var current = level[0];
-        for(int i = 0; i < level.Count - 1; i++)
-        {
-            if(level[i + 1] <= current)
-            {
-                if(fault > 0)
-                {
-                    return false;
-                }
-                fault++;
-                continue;
-            }
-            var distance = level[i + 1] - current;
-
-            if(distance < 1 || distance > 3)
-            {
-                if(fault > 0)
-                {
-                    return false;
-                }
-                fault++;
-            }
-            current = level[i + 1];
-        }
-    }
-    return true;
+    return false;
 }
+
 
 bool forward(List<int> level)
 {
