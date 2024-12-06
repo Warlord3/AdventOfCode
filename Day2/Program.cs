@@ -1,5 +1,5 @@
 ﻿List<List<int>> levels = [];
-using(StreamReader reader = new StreamReader("E:\\Projekte\\AdventOfCode\\Day2\\input.txt"))
+using(StreamReader reader = new StreamReader(Environment.CurrentDirectory + "/input.txt"))
 {
     while(!reader.EndOfStream)
     {

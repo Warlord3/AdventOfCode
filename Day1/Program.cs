@@ -1,6 +1,6 @@
 ﻿List<int> left = [];
 List<int> right = [];
-using(StreamReader reader = new StreamReader("E:\\Projekte\\AdventOfCode\\Day1\\input.txt"))
+using(StreamReader reader = new StreamReader(Environment.CurrentDirectory + "/input.txt"))
 {
     while(!reader.EndOfStream)
     {
