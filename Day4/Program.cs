@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-
+﻿
 
 List<List<char>> input = [];
 using(StreamReader reader = new StreamReader(Environment.CurrentDirectory + "/input.txt"))
