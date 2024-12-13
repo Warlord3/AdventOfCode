@@ -33,75 +33,54 @@ while(!finished)
 }
 Console.WriteLine(uniqueSteps);
 readInput();
-List<(int, int)> startPosition = [];
 finished = false;
-input[positionY][positionX] = '.';
 var startX = positionX;
 var startY = positionY;
-Direction lastDirection = Direction.None;
-Direction[,] visitedGlobal = new Direction[input[0].Count, input.Count];
-while(!finished)
+
+var loop = 0;
+for(int x = 0; x < input[0].Count; x++)
 {
-    visitedGlobal[positionX, positionY] |= direction;
-    switch(NextInput())
+    for(int y = 0; y < input.Count; y++)
     {
-        case '.':
-            if(TurnToRight())
+        Direction[,] visited = new Direction[input[0].Count, input.Count];
+        if(input[y][x] != '#')
+        {
+            input[y][x] = '#';
+        }
+        else
+        {
+            continue;
+        }
+        positionX = startX;
+        positionY = startY;
+        direction = Direction.Up;
+        finished = false;
+        //writeOutput();
+        while(!finished)
+        {
+            if((visited[positionX, positionY] & direction) > 0)
             {
-                var copyList = Copy(input);
-                AddTurn();
-                lastDirection = direction;
-                startPosition.Add((positionX, positionY));
-                var tempX = positionX;
-                var tempY = positionY;
-                bool exitLoop = false;
-                int turned = 0;
-
-                Direction[,] visited = new Direction[input[0].Count, input.Count];
-                while(!exitLoop)
-                {
-                    if((visited[positionX, positionY] & direction) > 0)
-                    {
-                        positionX = tempX;
-                        positionY = tempY;
-                        direction = lastDirection;
-                        RemoveTurn();
-                        break;
-                    }
-                    visited[positionX, positionY] |= direction;
-                    switch(NextInput())
-                    {
-                        case '.':
-                            StepForward();
-                            break;
-                        case '#':
-                            TurnRight();
-                            turned++;
-                            break;
-                        default:
-                            exitLoop = true;
-                            positionX = tempX;
-                            positionY = tempY;
-                            direction = lastDirection;
-                            RemoveTurn();
-                            startPosition.RemoveAt(startPosition.Count - 1);
-                            break;
-                    }
-                }
-                input = copyList;
+                loop++;
+                break;
             }
-            StepForward();
-            break;
-        case '#':
-            TurnRight();
-            break;
-        default:
-            finished = true;
-            break;
+            visited[positionX, positionY] |= direction;
+            switch(NextInput())
+            {
+                case '.':
+                    StepForward();
+                    break;
+                case '#':
+                    TurnRight();
+                    break;
+                default:
+                    finished = true;
+                    break;
+            }
+        }
+        input[y][x] = '.';
     }
-
 }
-Console.WriteLine(startPosition.Count);
+Console.WriteLine(loop);
 void readInput()
 {
     input.Clear();
@@ -117,6 +96,7 @@ void readInput()
                 positionX = position;
                 positionY = input.Count - 1;
                 direction = GetDirection(input[positionY][positionX]);
+                input[positionY][positionX] = '.';
             }
         }
     }
@@ -132,15 +112,6 @@ void writeOutput()
     }
 }
 
-List<List<char>> Copy(List<List<char>> list)
-{
-    var newList = new List<List<char>>();
-    foreach(var row in list)
-    {
-        newList.Add(new List<char>(row));
-    }
-    return newList;
-}
 char NextInput()
 {
     switch(direction)
@@ -165,47 +136,6 @@ char NextInput()
             break;
     }
     return ' ';
-}
-
-void AddTurn()
-{
-    switch(direction)
-    {
-        case Direction.Up:
-            input[positionY - 1][positionX] = '#';
-            break;
-        case Direction.Down:
-            input[positionY + 1][positionX] = '#';
-            break;
-        case Direction.Left:
-            input[positionY][positionX - 1] = '#';
-            break;
-        case Direction.Right:
-            input[positionY][positionX + 1] = '#';
-            break;
-        case Direction.None:
-            break;
-    }
-}
-void RemoveTurn()
-{
-    switch(direction)
-    {
-        case Direction.Up:
-            input[positionY - 1][positionX] = '.';
-            break;
-        case Direction.Down:
-            input[positionY + 1][positionX] = '.';
-            break;
-        case Direction.Left:
-            input[positionY][positionX - 1] = '.';
-            break;
-        case Direction.Right:
-            input[positionY][positionX + 1] = '.';
-            break;
-        case Direction.None:
-            break;
-    }
 }
 
 
@@ -255,55 +185,6 @@ void TurnRight()
             break;
     }
 }
-
-bool TurnToRight()
-{
-    switch(direction)
-    {
-        case Direction.None:
-            break;
-        case Direction.Up:
-            for(int i = positionX + 1; i < input[positionY].Count; i++)
-            {
-                if(input[positionY][i] == '#')
-                {
-                    return true;
-                }
-            }
-            break;
-        case Direction.Down:
-            for(int i = positionX - 1; i >= 0; i--)
-            {
-                if(input[positionY][i] == '#')
-                {
-                    return true;
-                }
-            }
-            break;
-        case Direction.Left:
-            for(int i = positionY - 1; i >= 0; i--)
-            {
-                if(input[i][positionX] == '#')
-                {
-                    return true;
-                }
-            }
-            break;
-        case Direction.Right:
-            for(int i = positionY + 1; i < input.Count; i++)
-            {
-                if(input[i][positionX] == '#')
-                {
-                    return true;
-                }
-            }
-            break;
-        default:
-            break;
-    }
-    return false;
-}
-
 
 Direction GetDirection(char inputChar) => inputChar switch
 {
