@@ -3,7 +3,6 @@
 
 
 LinkedList<int> filesStack = new();
-
 bool AppendFile = true;
 int id = 0;
 foreach(var character in sequence)
@@ -27,7 +26,6 @@ foreach(var character in sequence)
     AppendFile = !AppendFile;
 }
 List<int> newString = [];
-int index = 0;
 while(filesStack.Count > 0)
 {
     var temp = filesStack.First.Value;
